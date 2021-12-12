@@ -108,7 +108,7 @@ describe('[POST] api/auth/login', () => {
     expect(response.status).toEqual(expectedCode)
   })
 
-  test('responds with a message', async () => {
+  test('[POST] api/auth/login responds with a message', async () => {
     const expectedMessage = ('welcome thom herz');
     const response = await request(baseUrl).post('/auth/login').send({
       "username": "thom herz",
