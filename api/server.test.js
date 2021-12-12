@@ -108,6 +108,11 @@ describe('[POST] api/auth/login', () => {
     expect(response.status).toEqual(expectedCode)
   })
 
+  
+})
+describe('[POST] api/auth/login', () => {
+  const baseUrl = 'http://localhost:3300/api'
+
   test('[POST] api/auth/login responds with a message', async () => {
     const expectedMessage = ('welcome thom herz');
     const response = await request(baseUrl).post('/auth/login').send({
