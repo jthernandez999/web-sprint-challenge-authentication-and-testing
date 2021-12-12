@@ -3,10 +3,13 @@ const { JWT_SECRET } = require('../../config')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const checkUsernameExists = require('../middleware/checkUsernameExists');
+const Users = require('../users/users-model')
 
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+
+
+router.post('/register', (req, res, next) => {
+  // res.end('implement register, please!');
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -32,9 +35,19 @@ router.post('/register', (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
+let user = req.body
+const rounds = process.env.BCRYPT_ROUNDS || 8;
+const hash = bcrypt.hashSync(user.password, rounds)
+user.password = hash 
+
+Users.add(user)
+      .then(saved => {
+        res.status(201).json({ message: `Great to have you, ${saved.username}`})
+      })
+      .catch(next)
 });
 
-router.post('/login', checkUsernameExists,(req, res, next) => {
+router.post('/login', checkUsernameExists, (req, res, next) => {
   // res.end('implement login, please!')
   /*
     IMPLEMENT
@@ -59,20 +72,70 @@ router.post('/login', checkUsernameExists,(req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
+  // let { username, password } = req.body;
 
-  if (bcrypt.compareSync(req.body.password, req.user.password)) {
+  //   User.findBy({ username })
+
+  //     .then(([user]) => {
+  //       console.log('from Login Endpoint', user)
+  //       if (user && bcrypt.compareSync(password, user.password)) {
+  //         const token = generateToken(user)
+  //         res.status(200).json({
+  //           message: `welcome, ${user.username}`,
+  //           token,
+  //         })
+  //       } else {
+  //         next({ status: 401, message: 'invalid credentials' })
+  //       }
+  //     })
+  //     .catch(next)
+
+
+  // used with middleware
+  if(bcrypt.compareSync(req.body.password, req.user.password)) {
     const token = generateToken(req.user)
     res.status(200).json({
-      message: `welcome, ${req.user.username}`,
+      message: `welcome ${req.user.username}`,
       token,
     })
   } else {
-    next({
-      status: 401,
-      message: 'invalid credentials',
-    })
+    next({ status: 401, message: 'invalid credentials'})
   }
-});
+
+  });
+
+
+  // let { username, password } = req.body;
+
+  // User.findBy({ username })
+  //   .then(([user]) => {
+  //     if (user && bcrypt.compareSync(password, user.password)) {
+  //       const token = generateToken(user)
+  //       res.status(200).json({
+  //         message: `welcome ${user.username}`,
+  //         token,
+  //       })
+  //     } else {
+  //       res.status(401).json({ message: 'invalid credentials' })
+  //     }
+  //   })
+  //   .catch(next)
+
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function generateToken(user) {
   const payload = {
