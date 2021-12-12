@@ -3,12 +3,14 @@ const { JWT_SECRET } = require('../../config')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const checkUsernameExists = require('../middleware/checkUsernameExists');
-const Users = require('../users/users-model')
+const Users = require('../users/users-model');
+const correctBodyStructure = require('../middleware/correctBodyStructure');
+const checkUserNameFree = require('../middleware/checkUserNameFree');
 
 
 
 
-router.post('/register', (req, res, next) => {
+router.post('/register', correctBodyStructure, checkUserNameFree, (req, res, next) => {
   // res.end('implement register, please!');
   /*
     IMPLEMENT
@@ -72,24 +74,6 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
-  // let { username, password } = req.body;
-
-  //   User.findBy({ username })
-
-  //     .then(([user]) => {
-  //       console.log('from Login Endpoint', user)
-  //       if (user && bcrypt.compareSync(password, user.password)) {
-  //         const token = generateToken(user)
-  //         res.status(200).json({
-  //           message: `welcome, ${user.username}`,
-  //           token,
-  //         })
-  //       } else {
-  //         next({ status: 401, message: 'invalid credentials' })
-  //       }
-  //     })
-  //     .catch(next)
-
 
   // used with middleware
   if(bcrypt.compareSync(req.body.password, req.user.password)) {
@@ -103,36 +87,6 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
   }
 
   });
-
-
-  // let { username, password } = req.body;
-
-  // User.findBy({ username })
-  //   .then(([user]) => {
-  //     if (user && bcrypt.compareSync(password, user.password)) {
-  //       const token = generateToken(user)
-  //       res.status(200).json({
-  //         message: `welcome ${user.username}`,
-  //         token,
-  //       })
-  //     } else {
-  //       res.status(401).json({ message: 'invalid credentials' })
-  //     }
-  //   })
-  //   .catch(next)
-
-// })
-
-
-
-
-
-
-
-
-
-
-
 
 
 
