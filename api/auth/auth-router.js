@@ -6,6 +6,7 @@ const checkUsernameExists = require('../middleware/checkUsernameExists');
 const Users = require('../users/users-model');
 const correctBodyStructure = require('../middleware/correctBodyStructure');
 const checkUserNameFree = require('../middleware/checkUserNameFree');
+const checkIfMissingCredentials = require('../middleware/checkIfMissingCredentials');
 
 
 
@@ -55,7 +56,7 @@ Users.add(user)
       .catch(next)
 });
 
-router.post('/login', checkUsernameExists, (req, res, next) => {
+router.post('/login', checkUsernameExists, checkIfMissingCredentials, (req, res, next) => {
   // res.end('implement login, please!')
   /*
     IMPLEMENT
@@ -82,9 +83,9 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
   */
 
   // used with middleware
-  if(bcrypt.compareSync(req.body.password, req.user.password)) {
+  if(req.user && bcrypt.compareSync(req.body.password, req.user.password)) {
     const token = generateToken(req.user)
-    res.status(200).json({
+    res.json({
       message: `welcome ${req.user.username}`,
       token,
     })

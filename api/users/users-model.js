@@ -18,9 +18,8 @@ function findById(id) {
 }
 
 function findBy(filter) {
-    return db('users')
-        .select('users.id', 'users.username', 'users.password')
-        .where(filter)
+    return db('users').where(filter)
+
 }
 async function add(user) {
     const [id] = await db('users').insert(user)
