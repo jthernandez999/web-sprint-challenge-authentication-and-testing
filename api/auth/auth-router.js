@@ -44,7 +44,13 @@ user.password = hash
 
 Users.add(user)
       .then(saved => {
-        res.status(201).json({ message: `Great to have you, ${saved.username}`})
+        res.status(201).json({
+        // message: `Great to have you, ${saved.username}`,
+        id: saved.id, 
+        username: saved.username, 
+        password: saved.password,
+      })
+        
       })
       .catch(next)
 });
