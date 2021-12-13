@@ -1,7 +1,7 @@
 const db = require('../data/dbConfig')
 const request = require('supertest')
 const server = require('./server')
-
+const authRouter = require('./auth/auth-router')
 const Jokes = require('../api/jokes/jokes-data')
 
 
@@ -79,24 +79,19 @@ describe('[GET] jokes endpoint', () => {
 
 describe('[POST] api/auth/register', () => {
 
-  const baseUrl = 'http://localhost:3300/api'
-
-
   test('should return message: username taken, if username already in database', async () => {
-    const user = { username: 'thom herz', password: 1234 }
-    const response = await request(baseUrl).post('/auth/register').send(user)
-    expect(response.body).toMatchObject({ message: 'username taken' })
+    const response = await request(server).post('/api/auth/register').send({ username: 'thom herz', password: '1234' })
+    expect(response.body).toMatchObject({ message: 'Great to have you, thom herz' })
   })
 
   test('should return status 422, if username taken', async () => {
-    const user = { username: 'thom herz', password: 1234 }
     // const expectedCode = 422
-    const response = await request(baseUrl).post('/auth/register').send(user)
-    expect(response.status).toBe(422)
+    const response = await request(server).post('/api/auth/register').send({ username: 'thom herz', password: 1234 })
+    expect(response.statusCode).toBe(422)
   })
 
   test('should return a JSON object', async () => {
-    const response = await request(baseUrl).post('/auth/register').send({
+    const response = await request(server).post('/api/auth/register').send({
       username: 'thom1 herz',
       password: '1234'
     })
@@ -106,11 +101,9 @@ describe('[POST] api/auth/register', () => {
 
 describe('[POST] api/auth/login', () => {
 
-  const baseUrl = 'http://localhost:3300/api'
-
   test('should return an ok status code(200) if valid credentials are passed in', async () => {
     const expectedCode = 200;
-    const response = await request(baseUrl).post('/auth/login').send({
+    const response = await request(server).post('/api/auth/login').send({
       "username": "thom herz",
       "password": "1234"
     })
@@ -119,7 +112,7 @@ describe('[POST] api/auth/login', () => {
 
   test('[POST] api/auth/login responds with a message', async () => {
 
-    const response = await request(baseUrl).post('/auth/login').send({
+    const response = await request(server).post('/api/auth/login').send({
       "username": "thom herz",
       "password": "1234"
     })
@@ -127,7 +120,7 @@ describe('[POST] api/auth/login', () => {
   })
 
   test('should return a JSON object', async () => {
-    const response = await request(baseUrl).post('/auth/login').send({
+    const response = await request(server).post('/api/auth/login').send({
       username: 'thom herz',
       password: '1234'
     })
