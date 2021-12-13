@@ -16,37 +16,37 @@ module.exports = (req, res, next) => {
       the response body should include a string exactly as follows: "token invalid".
   */
 
-  const token = req.headers.authorization
-
-  if (!token) {
-    return next({
-      status: 401,
-      message: 'token required'
-    })
-  }
-  jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
-    if (err) {
-      next({ status: 401, message: 'token invalid' })
-    } else {
-      req.decodedToken = decodedToken
-      next()
-    }
-  })
-
   // const token = req.headers.authorization
 
-  // if(token) {
-  //   jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
-  //     if(err) {
-  //       next({ status: 401, message: 'token invalid'})
-  //     } else{
-  //       req.decodedToken = decodedToken 
-  //       next()
-  //     }
+  // if (!token) {
+  //   return next({
+  //     status: 401,
+  //     message: 'token required'
   //   })
-  // } else{ 
-  //   next({ status: 403, message: 'token required'})
   // }
+  // jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+  //   if (err) {
+  //     next({ status: 401, message: 'token invalid' })
+  //   } else {
+  //     req.decodedToken = decodedToken
+  //     next()
+  //   }
+  // })
+
+  const token = req.headers.authorization
+
+  if(token) {
+    jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+      if(err) {
+        next({ status: 401, message: 'token invalid'})
+      } else{
+        req.decodedToken = decodedToken 
+        next()
+      }
+    })
+  } else{ 
+    next({ status: 403, message: 'token required'})
+  }
 
 
 };

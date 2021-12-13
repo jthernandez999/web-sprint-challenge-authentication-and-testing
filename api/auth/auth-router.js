@@ -38,22 +38,32 @@ router.post('/register', correctBodyStructure, checkUserNameFree, (req, res, nex
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-let user = req.body
-const rounds = process.env.BCRYPT_ROUNDS || 8;
-const hash = bcrypt.hashSync(user.password, rounds)
-user.password = hash 
+// let user = req.body
+// const rounds = process.env.BCRYPT_ROUNDS || 8;
+// const hash = bcrypt.hashSync(user.password, rounds)
+// user.password = hash 
 
-Users.add(user)
-      .then(saved => {
-        res.status(201).json({
-        // message: `Great to have you, ${saved.username}`,
-        id: saved.id, 
-        username: saved.username, 
-        password: saved.password,
-      })
+// Users.add(user)
+//       .then(saved => {
+//         res.status(201).json({
+//         // message: `Great to have you, ${saved.username}`,
+//         id: saved.id, 
+//         username: saved.username, 
+//         password: saved.password,
+//       })
         
-      })
-      .catch(next)
+//       })
+//       .catch(next)
+
+const { username, password } = req.body
+const hash = bcrypt.hashSync(password, 8)
+
+Users.add({ username, password: hash})
+.then(newUser => {
+  res.status(201).json(newUser)
+})
+.catch(next)
+
 });
 
 router.post('/login', checkUsernameExists, checkIfMissingCredentials, (req, res, next) => {
@@ -83,9 +93,9 @@ router.post('/login', checkUsernameExists, checkIfMissingCredentials, (req, res,
   */
 
   // used with middleware
-  if(req.user && bcrypt.compareSync(req.body.password, req.user.password)) {
+  if(bcrypt.compareSync(req.body.password, req.user.password)) {
     const token = generateToken(req.user)
-    res.json({
+    res.status(200).json({
       message: `welcome ${req.user.username}`,
       token,
     })

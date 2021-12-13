@@ -1,7 +1,7 @@
 const db = require('../data/dbConfig')
 const request = require('supertest')
 const server = require('./server')
-const UsersModel = require('./users/users-model')
+
 const Jokes = require('../api/jokes/jokes-data')
 
 
@@ -45,8 +45,8 @@ describe('jokes endpoint', () => {
       data = await Jokes
     })
 
-    it('should return an invalid status code(401) if not authorized', async () => {
-      const expectedCode = 401;
+    it('should return an invalid status code(403) if not authorized', async () => {
+      const expectedCode = 403;
       const response = await request(server).get('/api/jokes')
       expect(response.status).toEqual(expectedCode)
     })
