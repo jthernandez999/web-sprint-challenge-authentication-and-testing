@@ -5,6 +5,7 @@ const server = require('./server')
 const Jokes = require('../api/jokes/jokes-data')
 
 
+
 beforeAll(async () => {
   await db.migrate.rollback()
   await db.migrate.latest()
@@ -117,11 +118,6 @@ describe('[POST] api/auth/login', () => {
     expect(response.status).toBe(expectedCode)
   })
 
-  
-})
-describe('[POST] api/auth/login', () => {
-  const baseUrl = 'http://localhost:3300/api'
-
   test('[POST] api/auth/login responds with a message', async () => {
     const expectedMessage = ('welcome thom herz');
     const response = await request(baseUrl).post('/auth/login').send({
@@ -130,4 +126,5 @@ describe('[POST] api/auth/login', () => {
     })
     expect(response.body.message).toEqual(expectedMessage)
   })
+  
 })
