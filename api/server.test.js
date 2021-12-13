@@ -39,7 +39,7 @@ describe('server.js', () => {
 
 })
 
-describe('jokes endpoint', () => {
+describe('[GET] jokes endpoint', () => {
   describe('Jokes', () => {
     let data
     beforeEach(async () => {
@@ -96,18 +96,17 @@ describe('[POST] api/auth/register', () => {
   })
 
   test('should return a JSON object', async () => {
-    const response = await request(baseUrl).get('/auth/register').send({
-      username: 'thom herz',
+    const response = await request(baseUrl).post('/auth/register').send({
+      username: 'thom1 herz',
       password: '1234'
     })
-    expect(response.type).toEqual('text/html')
+    expect(response.type).toEqual('application/json')
   })
 })
 
 describe('[POST] api/auth/login', () => {
 
   const baseUrl = 'http://localhost:3300/api'
-
 
   test('should return an ok status code(200) if valid credentials are passed in', async () => {
     const expectedCode = 200;
@@ -128,11 +127,11 @@ describe('[POST] api/auth/login', () => {
   })
 
   test('should return a JSON object', async () => {
-    const response = await request(baseUrl).get('/auth/login').send({
+    const response = await request(baseUrl).post('/auth/login').send({
       username: 'thom herz',
       password: '1234'
     })
-    expect(response.type).toEqual('text/html')
+    expect(response.type).toEqual('application/json')
   })
   
 })
