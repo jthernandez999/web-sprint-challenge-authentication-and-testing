@@ -80,11 +80,12 @@ describe('[POST] api/auth/register', () => {
 
   const baseUrl = 'http://localhost:3300/api'
 
-  // test('responds with status 201', async () => {
-  //   const user = { username: 'tony stark', password: 1234 }
-  //   const response = await request(baseUrl).post('/auth/register').send(user)
-  //   expect(response.status).toBe(201)
-  // })
+  test('responds with status 422', async () => {
+    const user = { username: 'tony stark', password: 1234 }
+    const response = await request(baseUrl).post('/auth/register').send(user)
+    expect(response.status).toBe(422)
+    expect(response.message).toBe()
+  })
 
   test('should return message: username taken, if username already in database', async () => {
     const user = { username: 'thom herz', password: 1234 }
@@ -95,9 +96,9 @@ describe('[POST] api/auth/register', () => {
 
   test('should return status 422, if username taken', async () => {
     const user = { username: 'thom herz', password: 1234 }
-    const expectedCode = 422
+    // const expectedCode = 422
     const response = await request(baseUrl).post('/auth/register').send(user)
-    expect(response.status).toBe(expectedCode)
+    expect(response.status).toBe(422)
   })
 
 })
@@ -113,7 +114,7 @@ describe('[POST] api/auth/login', () => {
       "username": "thom herz",
       "password": "1234"
     })
-    expect(response.status).toEqual(expectedCode)
+    expect(response.status).toBe(expectedCode)
   })
 
   
