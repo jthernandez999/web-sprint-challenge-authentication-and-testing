@@ -95,6 +95,13 @@ describe('[POST] api/auth/register', () => {
     expect(response.status).toBe(422)
   })
 
+  test('should return a JSON object', async () => {
+    const response = await request(baseUrl).get('/auth/register').send({
+      username: 'thom herz',
+      password: '1234'
+    })
+    expect(response.type).toEqual('text/html')
+  })
 })
 
 describe('[POST] api/auth/login', () => {
@@ -118,6 +125,14 @@ describe('[POST] api/auth/login', () => {
       "password": "1234"
     })
     expect(response.body).toMatchObject({message:'welcome thom herz'})
+  })
+
+  test('should return a JSON object', async () => {
+    const response = await request(baseUrl).get('/auth/login').send({
+      username: 'thom herz',
+      password: '1234'
+    })
+    expect(response.type).toEqual('text/html')
   })
   
 })
