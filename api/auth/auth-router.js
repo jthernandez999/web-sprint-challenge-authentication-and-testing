@@ -64,7 +64,7 @@ Users.add(user)
 // })
 // .catch(next)
 
-// });
+});
 
 router.post('/login', checkUsernameExists, checkIfMissingCredentials, (req, res, next) => {
   // res.end('implement login, please!')

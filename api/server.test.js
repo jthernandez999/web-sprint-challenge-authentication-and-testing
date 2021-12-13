@@ -87,9 +87,17 @@ describe('[POST] api/auth/register', () => {
   // })
 
   test('should return message: username taken, if username already in database', async () => {
-    const user = { username: 'tony stark', password: 1234 }
+    const user = { username: 'thom herz', password: 1234 }
+    const expectedMessage = ('username taken')
     const response = await request(baseUrl).post('/auth/register').send(user)
-    expect(response.body.message).toBe('username taken')
+    expect(response.body.message).toBe(expectedMessage)
+  })
+
+  test('should return status 422, if username taken', async () => {
+    const user = { username: 'thom herz', password: 1234 }
+    const expectedCode = 422
+    const response = await request(baseUrl).post('/auth/register').send(user)
+    expect(response.status).toBe(expectedCode)
   })
 
 })
